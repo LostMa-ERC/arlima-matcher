@@ -18,12 +18,28 @@ class Models(unittest.TestCase):
     def test_stemma_tei(self):
         for doc in self.all_stemmata():
             if ".tei" in doc.suffixes:
-                with open(doc) as f:
-                    tei = TEIParser(f)
+                tei = TEIParser(doc)
 
-                    # Test witnesses
-                    if tei.witnesses:
-                        self.assertGreater(len(tei.witnesses), 0)
+                # Test witnesses
+                if tei.witnesses:
+                    self.assertGreater(len(tei.witnesses), 0)
+
+                # Test creation
+                self.assertIsNotNone(tei.creation)
+
+                # Test keywords
+                self.assertGreater(len(tei.keywords), 0)
+
+                # Test language
+                self.assertIsNotNone(tei.lang)
+
+    def test_date(self):
+        for doc in self.all_stemmata():
+            if ".tei" in doc.suffixes:
+                tei = TEIParser(doc)
+                date = tei.creation.origDate
+                if date:
+                    self.assertLessEqual(len(date), 2)
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ LABEL = namedtuple("LABEL", field_names=["type", "text"])
 
 @dataclass
 class Witness:
+    id: str
     label: LABEL
     idno: str
     origDate: str
@@ -17,11 +18,12 @@ class Witness:
     ptr: list[POINTER]
 
     @classmethod
-    def validate(cls, wit: bs4.element.Tag):
+    def validate(cls, wit: bs4.element.Tag) -> "Witness":
         pointers = []
         for ptr in wit.find_all("ptr"):
             pointers.append(POINTER(type=ptr.get("type"), target=ptr.get("target")))
         return Witness(
+            id=wit.get("xml:id"),
             label=LABEL(type=wit.label.get("type"), text=wit.label.text.strip()),
             idno=wit.idno.text.strip(),
             origDate=wit.origDate.text.strip(),

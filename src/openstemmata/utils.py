@@ -1,6 +1,7 @@
 from pathlib import Path
 from bs4 import BeautifulSoup
 from io import TextIOWrapper
+from datetime import datetime
 
 
 def parse_xml(input: str | TextIOWrapper | Path):
