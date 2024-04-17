@@ -29,6 +29,7 @@ dependencies = [
     "rich==13.7.1",
     "setuptools==69.2.0",
     "soupsieve==2.5",
+    "splink==3.9.14",
     "typing_extensions==4.11.0",
     "urllib3==2.2.1",
 ]
@@ -44,7 +45,7 @@ version = {attr = "arlima.VERSION"}
 # Leave empty for the dynamic version metadata
 
 [tool.pytest.ini_options]
-testpaths = ["tests", "arlima", "openstemmata"]
+testpaths = ["tests", "arlima", "linker"]
 addopts = "-v -ra -q --doctest-modules"
 log_cli = true
 log_cli_level = "INFO"

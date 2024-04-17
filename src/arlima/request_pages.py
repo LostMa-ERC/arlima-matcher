@@ -1,6 +1,9 @@
 import csv
-from concurrent.futures import ThreadPoolExecutor
 import io
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
+from typing import Generator
+
 import duckdb
 import requests
 import requests.adapters
@@ -11,12 +14,10 @@ from rich.progress import (
     TextColumn,
     TimeElapsedColumn,
 )
-from typing import Generator
+
 from arlima.fm import TMP
 from arlima.page import Page
 from arlima.witness import Witness, yield_witnesses
-from contextlib import contextmanager
-
 
 works_file_path = TMP.joinpath("works.csv")
 witnesses_file_path = TMP.joinpath("witnesses.csv")
@@ -61,7 +62,7 @@ def setup_pages_table(conn: duckdb.DuckDBPyConnection) -> None:
 def setup_witnesses_table(conn: duckdb.DuckDBPyConnection) -> None:
     conn.execute("DROP TABLE IF EXISTS manuscripts;")
     conn.execute(
-        "CREATE TABLE manuscripts (page VARCHAR, archive_href VARCHAR, archive VARCHAR, resource VARCHAR)"
+        "CREATE TABLE manuscripts (page VARCHAR, archive_href VARCHAR, settlement VARCHAR, repository VARCHAR, collection VARCHAR, idno VARCHAR)"
     )
 
 
@@ -108,7 +109,9 @@ def request_pages(conn: duckdb.DuckDBPyConnection):
 
     # Insert into the new tables the scraping results
     conn.execute("INSERT INTO pages SELECT * FROM '{}'".format(works_file_path))
-    conn.execute("INSERT INTO witnesses SELECT * FROM '{}'".format(witnesses_file_path))
+    conn.execute(
+        "INSERT INTO manuscripts SELECT * FROM '{}'".format(witnesses_file_path)
+    )
 
 
 class Scraper:

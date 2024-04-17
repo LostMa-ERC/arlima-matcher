@@ -117,7 +117,7 @@ class Page:
             return {field: self.__getattribute__(field) for field in self.fields()}
 
     @classmethod
-    def fields(cls):
+    def fields(cls) -> list:
         return [
             "link",
             "form",
